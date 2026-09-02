@@ -1,40 +1,88 @@
-# AI Resume Screening System
+# 🤖 AI Resume Screening System
 
-An AI-powered resume screening system that analyzes a candidate's resume against a job description and generates ATS scores, skill analysis, and interview questions.
+An AI-powered resume screening system that analyzes a candidate's resume against a job description and generates ATS scores, skill matching, strengths, weaknesses, and interview questions.
 
-## Features
+## 🎯 Project Overview
 
-- Upload resume in PDF format
-- Extract text from resume
-- Extract skills from resume and job description
-- Calculate skill match score
-- Generate ATS score
-- Identify matched skills
-- Identify missing skills
-- Generate strengths and weaknesses
-- Generate easy, medium, and hard interview questions
-- REST API using FastAPI
-- Interactive UI using Streamlit
-- LLM analysis using Groq
+Recruiters often need to screen many resumes against job descriptions.
 
-## Tech Stack
+This project automates the initial screening process by:
 
-- Python
-- FastAPI
-- Streamlit
-- Groq LLM
-- Pydantic
-- PyPDF2
-- REST API
+1. Accepting a resume in PDF format
+2. Extracting resume text
+3. Extracting skills from the resume and job description
+4. Comparing candidate skills with required skills
+5. Calculating a deterministic skill-match score
+6. Sending resume and job-description information to an LLM
+7. Generating ATS analysis and interview questions
+8. Validating the LLM response using Pydantic
+9. Displaying the results through a Streamlit interface
 
-## Project Structure
+---
+
+## ✨ Features
+
+- 📄 PDF resume upload
+- 📝 Job description input
+- 🔍 Resume text extraction
+- 🧠 Skill extraction
+- 🔗 Skill matching
+- 📊 Deterministic skill-match score
+- 🤖 LLM-powered resume analysis
+- 🎯 ATS score generation
+- ✅ Matched skills identification
+- ❌ Missing skills identification
+- 💪 Strength analysis
+- ⚠️ Weakness analysis
+- 💬 Easy, medium, and hard interview questions
+- 🚀 FastAPI REST API
+- 🖥️ Streamlit frontend
+- 🔐 Pydantic response validation
+
+---
+
+## 🏗️ System Architecture
 
 ```text
-app/
-├── frontend.py
-├── llm.py
-├── main.py
-├── parser.py
-├── prompts.py
-├── schemas.py
-└── skills.py
+                    Resume PDF
+                        │
+                        ▼
+                ┌─────────────────┐
+                │    Streamlit    │
+                │    Frontend     │
+                └────────┬────────┘
+                         │
+                         │ HTTP Request
+                         ▼
+                ┌─────────────────┐
+                │     FastAPI     │
+                │      API        │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │   PDF Parser    │
+                │    PyPDF2       │
+                └────────┬────────┘
+                         │
+                         ▼
+                   Resume Text
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+       Skill Extraction       ATS Prompt
+              │                     │
+              ▼                     ▼
+       Skill Comparison        Groq LLM
+              │                     │
+              ▼                     ▼
+        Match Score            JSON Output
+                                    │
+                                    ▼
+                           Pydantic Validation
+                                    │
+                                    ▼
+                            Final Analysis
+                                    │
+                                    ▼
+                             Streamlit UI
