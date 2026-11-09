@@ -1,29 +1,33 @@
-from fastapi import FastAPI,UploadFile,File,HTTPException
-import os 
-import shutil# copies file content efficiently
+
+from fastapi import FastAPI, UploadFile, File, Form
+import os
+import shutil
+
 from app.parser import extract_text
 from app.prompts import ATS_PROMPT
-from app.llm import analyze_resume
-from fastapi import Form
-from app.skills import extract_skills,compare_skills,calculate_match_score
+from app.llm import analyze_resume, extract_skills_with_llm
 from app.schemas import ResumeAnalysis
 
-UPLOAD_DIR="uploads"
-os.makedirs(UPLOAD_DIR,exist_ok=True)
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-app=FastAPI(
+app = FastAPI(
     title="AI Resume Screening API",
     version="1.0.0"
 )
 
+
 @app.get("/")
 def root():
-    return{"message":"Welcome to AI Resume Screening API"
-        }
+    return {
+        "message": "Welcome to AI Resume Screening API"
+    }
+
 
 @app.get("/health")
 def health():
-    return{"status":"healthy"}
+    return {"status": "healthy"}
+
 
 @app.post("/upload-resume")
 @app.post(
@@ -44,36 +48,40 @@ async def upload_resume_api(
     # Extract resume text
     resume_text = extract_text(file_path)
 
-    # Skill extraction
-    resume_skills = extract_skills(resume_text)
-    jd_skills = extract_skills(job_description)
-
-    # Skill comparison
-    matched_skills, missing_skills = compare_skills(
-        resume_skills,
-        jd_skills
+    # Dynamic skill extraction using Groq LLM
+    skill_analysis = extract_skills_with_llm(
+        resume_text,
+        job_description
     )
 
-    # Calculate score
-    match_score = calculate_match_score(
-        matched_skills,
-        jd_skills
-    )
+    matched_skills = skill_analysis["matched_skills"]
+    missing_skills = skill_analysis["missing_skills"]
 
-    # Create prompt
+    # Calculate match score using Python
+    total_skills = len(set(matched_skills + missing_skills))
+
+    if total_skills == 0:
+        match_score = 0
+    else:
+        match_score = round(
+            len(set(matched_skills)) / total_skills * 100,
+            2
+        )
+
+    # Create ATS prompt
     prompt = ATS_PROMPT.format(
         resume_text=resume_text,
         job_description=job_description
     )
 
-    # LLM analysis
+    # Existing LLM resume analysis
     result = analyze_resume(prompt)
 
-    # Override with deterministic values
+    # Update structured response
     result.match_score = match_score
     result.matched_skills = matched_skills
     result.missing_skills = missing_skills
+
     print(result)
 
     return result
-

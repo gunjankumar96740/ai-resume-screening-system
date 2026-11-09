@@ -4,4 +4,4 @@ def extract_text(file_path:str):
     text="" ""
     for page in reader.pages:
         text+=page.extract_text()
-    return text    
+    return text  
