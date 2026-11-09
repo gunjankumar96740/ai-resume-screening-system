@@ -3,7 +3,7 @@
 An LLM-powered resume screening application that analyzes candidate resumes against job descriptions, identifies skill gaps, evaluates resume quality, and generates interview questions.
 
 <p align="center">
-  <a href="https://ai-resume-screening-system-oqdvq9a8fd5qzcads8s8.streamlit.app/">🚀 Live Application</a> •
+  <a href="https://ai-resume-screening-system-oqdvq9a8fd5qzcads8s8.streamlit.app](https://ai-resume-screening-system-oqdvq9a8tfd5qzqcads8s8.streamlit.app/)">🚀 Live Application</a> •
   <a href="https://ai-resume-screening-system-r5oo.onrender.com/docs">📚 API Documentation</a> •
   <a href="https://github.com/gunjankumar96740/ai-resume-screening-system">💻 Source Code</a>
 </p>
