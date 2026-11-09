@@ -34,7 +34,7 @@ if st.button("Analyze Resume"):
         }
 
         response = requests.post(
-            "http://127.0.0.1:8000/analyze-resume",
+            "https://ai-resume-screening-system-r5oo.onrender.com/analyze-resume",
             files=files,
             data=data
         )
